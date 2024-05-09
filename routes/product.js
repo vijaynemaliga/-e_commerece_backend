@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
 const product_controllers=require('../controllers.js/productcontrollers')
+const {authorizer}= require('../middlewares/authorization')
 //allproducts route
-router.get('/all',product_controllers.allproducts);
+router.get('/all',authorizer,product_controllers.allproducts);
 //form to add a product
 router.get('/addnewProduct')
 //get all category  names
-router.get('/category',)
+router.get('/category',product_controllers.allcategory)
 //category form
 router.get('/category/form')
 //all product in category 

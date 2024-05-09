@@ -28,5 +28,26 @@ exports.postloginCrendentials=async(req,res,next)=>{
         }
     });
     const access_token=jwt.sign({username},process.env.jwt_secert_key,{ expiresIn: '15m' })
-    res.status(200).json(access_token)
+    const refresh_token= jwt.sign({username},process.env.jwt_refresh_secret_key)
+    res.status(200).json({access_token,refresh_token})
+}
+exports.refresh_Token=async(req,res,next)=>{
+    try {
+        
+        let token = req.headers.authorization;
+        console.log(token)
+        if (!token){
+         return res.status(404).json({ success: false, msg: "Token not  found" });
+        }
+       token = token.split(" ")[1];
+       const decoded = jwt.verify(token, process.env.jwt_refresh_secret_key);
+       console.log( req.headers)
+       console.log( decoded.username)
+       const username = decoded.username;
+       const access_token=jwt.sign({username},process.env.jwt_secert_key,{ expiresIn: '15m' })
+       const refresh_token= jwt.sign({username},process.env.jwt_refresh_secret_key)
+       return res.status(200).json({access_token,refresh_token})
+      } catch (error) {
+      return res.status(401).json({ success: false, msg: error.message });
+      }
 }
