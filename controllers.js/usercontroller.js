@@ -51,3 +51,31 @@ exports.refresh_Token=async(req,res,next)=>{
       return res.status(401).json({ success: false, msg: error.message });
       }
 }
+
+exports.postOrder = async (req, res, next) => {
+    try {
+        const userDetails = await user.findOne({ name: req.body.name });
+        if (!userDetails) {
+            return res.status(400).json({ msg: "Invalid user" });
+        }
+
+        const decodedTitle=decodeURIComponent(req.body.title)
+        console.log(decodedTitle)
+        const result = await product.findOne({ title:decodedTitle });
+        console.log(result)
+        if (!result) {
+            return res.status(400).json({ msg: "Invalid product" });
+        }
+        const productid=[] 
+        productid.push(result._id)
+        const newOrder = new order({
+            status: 'notdelivered',
+           productid
+        });
+        
+        await newOrder.save();
+        res.status(200).json({ msg: "Order created successfully", order: newOrder });
+    } catch (error) {
+        res.status(500).json({ msg: `Error while posting order details: ${error.message}` });
+    }
+};

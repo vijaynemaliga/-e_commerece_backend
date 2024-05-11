@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const order= new Schema({
+const order_schema= new Schema({
     status:{
         type: String,
         enum: ['delivered', 'notdelivered', 'cancelled'],
@@ -13,3 +13,4 @@ const order= new Schema({
         default:null
     }]
 })
+module.exports= mongoose.model('order',order_schema)
