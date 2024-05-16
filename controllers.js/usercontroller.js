@@ -72,10 +72,51 @@ exports.postOrder = async (req, res, next) => {
             status: 'notdelivered',
            productid
         });
-        
+        userDetails.orderid.push(newOrder._id)
         await newOrder.save();
-        res.status(200).json({ msg: "Order created successfully", order: newOrder });
+        await userDetails.save()
+        res.status(200).json({ msg: "Order created successfully", order: userDetails });
     } catch (error) {
         res.status(500).json({ msg: `Error while posting order details: ${error.message}` });
+    }
+};
+
+exports.getUserOrderDetails=async(req,res,next)=>{
+    try{
+        const userDetails=await user.findOne({ name: req.body.name }).populate('orderid');
+        res.status(200).json({msg:"user details",user:userDetails})
+    }catch(error){
+        res.status(500).json({ msg: `Error while getting user order details: ${error.message}` });
+    }
+}
+exports.getUserWhishlistDetails=async(req,res,next)=>{
+    try{
+        const userDetails=await user.findOne({ name: req.body.name }).populate(' whishlist');
+        res.status(200).json({msg:"user details",user:userDetails})
+    }catch(error){
+        res.status(500).json({ msg: `Error while getting user  whishlist details: ${error.message}` });
+    }
+}
+
+
+exports.postWhishlist = async (req, res, next) => {
+    try {
+        const userDetails = await user.findOne({ name: req.body.name });
+        if (!userDetails) {
+            return res.status(400).json({ msg: "Invalid user" });
+        }
+
+        const decodedTitle=decodeURIComponent(req.body.title)
+        console.log(decodedTitle)
+        const result = await product.findOne({ title:decodedTitle });
+        console.log(result)
+        if (!result) {
+            return res.status(400).json({ msg: "Invalid product" });
+        }
+        userDetails.whishlist.push(result._id)
+        await userDetails.save()
+        res.status(200).json({ msg: "whishlist  created successfully", order: userDetails });
+    } catch (error) {
+        res.status(500).json({ msg: `Error while posting whilist details: ${error.message}` });
     }
 };

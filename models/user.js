@@ -13,7 +13,7 @@ const user_schema=  new Schema({
     },
     orderid:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Order',
+        ref:'order',
         default:null
     }],
     whishlist:[{

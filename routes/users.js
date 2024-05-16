@@ -5,9 +5,9 @@ const user_controllers= require('../controllers.js/usercontroller')
 router.get('/',user_controllers.getloginform);
 router.post('/',user_controllers.postloginCrendentials)
 router.get('/refresh_token',user_controllers.refresh_Token)
-router.get('/orders',)
-router.get('/wishlist')
+router.get('/orders',user_controllers.getUserOrderDetails)
+router.get('/wishlist',user_controllers.getUserWhishlistDetails)
 router.get('order/:status')
 router.post('/orders',user_controllers.postOrder)
-router.post('/whishlist')
+router.post('/whishlist',)
 module.exports = router;
